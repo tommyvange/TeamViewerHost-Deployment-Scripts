@@ -1,0 +1,7 @@
+{
+    "CustomConfigID": "ABC123",
+    "AssignmentID": "AAAAABBBBBCCCCDDDDEEEE11112222333344445555=",
+    "Logging": false,
+    "NoShortcut": true,
+    "DeviceAlias": "%COMPUTERNAME%"
+}
