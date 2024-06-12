@@ -62,6 +62,8 @@ if (-not (Test-Path $InstallerPath)) { Write-Error "InstallerPath is invalid or 
 # Determine log file path
 $logFilePath = "$env:TEMP\installation_log_${ConfigID}.txt"
 
+$settingsfile = Join-Path -Path $PSScriptRoot -ChildPath "TeamViewer_Settings.tvopt"
+
 # Start transcript logging if enabled
 if ($Logging) {
     Start-Transcript -Path $logFilePath
@@ -69,7 +71,7 @@ if ($Logging) {
 
 try {
     # Build the MSI install argument list
-    $msiArguments = "/i `"$InstallerPath`" /qn CUSTOMCONFIGID=$ConfigID"
+    $msiArguments = "/i `"$InstallerPath`" /qn CUSTOMCONFIGID=$ConfigID INSTALLSECURITYKEYREDIRECTION=1 SETTINGSFILE=`"$settingsfile`""
     if ($NoShortcut) {
         $msiArguments += " DESKTOPSHORTCUTS=0"
     }

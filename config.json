@@ -1,7 +1,10 @@
 {
-    "CustomConfigID": "ABC123",
+    "ConfigID": "ABC123",
     "AssignmentID": "AAAAABBBBBCCCCDDDDEEEE11112222333344445555=",
-    "Logging": false,
+    "Logging": true,
     "NoShortcut": true,
-    "DeviceAlias": "%COMPUTERNAME%"
+    "DeviceAlias": "%COMPUTERNAME%",
+    "InstallerPath": "./TeamViewer_Host.msi",
+    "InstallSecurityKeyRedirection": false,
+    "SettingsFile": "./TeamViewer_Settings.tvopt"
 }

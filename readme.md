@@ -16,8 +16,10 @@ The scripts use a configuration file (`config.json`) to store default values for
     "AssignmentID": "AAAAABBBBBCCCCDDDDEEEE11112222333344445555=",
     "Logging": false,
     "NoShortcut": true,
-    "DeviceAlias": "%COMPUTERNAME%"
-    "InstallerPath": "./TeamViewer_Host.msi"
+    "DeviceAlias": "%COMPUTERNAME%",
+    "InstallerPath": "./TeamViewer_Host.msi",
+    "InstallSecurityKeyRedirection": false,
+    "SettingsFile": "./TeamViewer_Settings.tvopt"
 }
 ```
 ### Parameters
@@ -28,6 +30,8 @@ The scripts use a configuration file (`config.json`) to store default values for
 -   `NoShortcut`: If set to `true`, disables the creation of desktop shortcuts during installation.
 -   `DeviceAlias`: Specifies the device alias. If not provided, defaults to `%COMPUTERNAME%`.
 - `InstallerPath`: The path to the `TeamViewer_Host.msi` installer. Defaults to `./TeamViewer_Host.msi`.
+- `InstallSecurityKeyRedirection`: Installs security key redirection during if set to `true`. Default is `false`.
+- `SettingsFile`: Specifies the path to a settings file that contains configuration settings for TeamViewer. Defaults to nothing unless specified.
 
 ### Obtaining TeamViewer_Host.msi
 
@@ -52,7 +56,7 @@ The install script adds TeamViewer using the specified parameters.
 To run the install script, use the following command:
 
 ``` powershell
-.\install.ps1 -ConfigID "<ConfigID>" -AssignmentID "<AssignmentID>" [-Logging] [-NoShortcut] [-DeviceAlias "<DeviceAlias>"] [-InstallerPath "<InstallerPath>"]
+.\install.ps1 -ConfigID "<ConfigID>" -AssignmentID "<AssignmentID>" [-Logging] [-NoShortcut] [-DeviceAlias "<DeviceAlias>"] [-InstallerPath "<InstallerPath>"] [-InstallSecurityKeyRedirection] [-SettingsFile "<SettingsPath>"]
 ```
 
 ### Parameters
@@ -63,6 +67,8 @@ To run the install script, use the following command:
 -   [Optional] `NoShortcut`: Disables the creation of desktop shortcuts if set.
 -   [Optional] `DeviceAlias`: Specifies the device alias. Defaults to `%COMPUTERNAME%`.
 -   [Optional] `InstallerPath`: Specifies the path to the `TeamViewer_Host.msi` installer. Defaults to `./TeamViewer_Host.msi`.
+-   [Optional] `InstallSecurityKeyRedirection`: If set, adds `INSTALLSECURITYKEYREDIRECTION=1` to the MSI install arguments. Defaults to false.
+-   [Optional] `SettingsFile`: Specifies the path to a settings file. Adds `SETTINGSFILE="path"` to the MSI arguments. Defaults to nothing.
 
 ### Fallback to Configuration File
 
@@ -73,7 +79,7 @@ If a parameter is not provided via the command line, the script will attempt to 
 To specify values directly via the command:
 
 ``` powershell
-.\install.ps1 -ConfigID "ABC123" -AssignmentID "AAAAABBBBBCCCCDDDDEEEE11112222333344445555=" -Logging -NoShortcut -DeviceAlias "ACCOUNTING_%COMPUTERNAME%" -InstallerPath "./TeamViewer_Host.msi"
+.\install.ps1 -ConfigID "ABC123" -AssignmentID "AAAAABBBBBCCCCDDDDEEEE11112222333344445555=" -Logging -NoShortcut -DeviceAlias "ACCOUNTING_%COMPUTERNAME%" -InstallerPath "./TeamViewer_Host.msi" -InstallSecurityKeyRedirection -SettingsFile "./TeamViewer_Settings.tvopt"
 ``` 
 
 To use the default values from the configuration file:
@@ -235,6 +241,8 @@ Or by setting the `Logging` property in the configuration file:
     "Logging": true,
     "NoShortcut": true,
     "DeviceAlias": "%COMPUTERNAME%"
+    "InstallSecurityKeyRedirection": false,
+    "SettingsFile": "./TeamViewer_Settings.tvopt"
 }
 ```
 ## Error Handling
