@@ -69,6 +69,21 @@ if ($Logging) {
     Start-Transcript -Path $logFilePath
 }
 
+function Remove-TeamViewerShortcut {
+    $desktopPaths = @(
+        [System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop")),
+        [System.IO.Path]::Combine([System.Environment]::GetFolderPath("CommonDesktopDirectory"))
+    )
+
+    foreach ($path in $desktopPaths) {
+        $shortcutPath = [System.IO.Path]::Combine($path, "TeamViewer.lnk")
+        if (Test-Path $shortcutPath) {
+            Remove-Item $shortcutPath -ErrorAction SilentlyContinue
+            Write-Output "Removed shortcut: $shortcutPath"
+        }
+    }
+}
+
 try {
     # Build the MSI install argument list
     $msiArguments = "/i `"$InstallerPath`" /qn CUSTOMCONFIGID=$ConfigID INSTALLSECURITYKEYREDIRECTION=1 SETTINGSFILE=`"$settingsfile`""
@@ -132,5 +147,10 @@ try {
     # Stop transcript logging if enabled
     if ($Logging) {
         Stop-Transcript
+    }
+
+    # Remove TeamViewer shortcut if NoShortcut is enabled
+    if ($NoShortcut) {
+        Remove-TeamViewerShortcut
     }
 }
