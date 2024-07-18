@@ -26,7 +26,8 @@ param (
     [switch]$Logging,
     [switch]$NoShortcut,
     [string]$DeviceAlias,
-    [string]$InstallerPath
+    [string]$InstallerPath,
+    [switch]$InstallSecurityKeyRedirection
 )
 
 # Path to configuration file
@@ -47,6 +48,7 @@ if (-not $Logging -and $config.Logging -ne $null) { $Logging = $config.Logging }
 if (-not $NoShortcut -and $config.NoShortcut -ne $null) { $NoShortcut = $config.NoShortcut }
 if (-not $DeviceAlias) { $DeviceAlias = $config.DeviceAlias }
 if (-not $InstallerPath) { $InstallerPath = Join-Path -Path $PSScriptRoot -ChildPath "TeamViewer_Host.msi" }
+if (-not $InstallSecurityKeyRedirection -and $config.InstallSecurityKeyRedirection -ne $null) { $InstallSecurityKeyRedirection = $config.InstallSecurityKeyRedirection }
 
 # Default DeviceAlias to COMPUTERNAME if not specified
 if (-not $DeviceAlias) { $DeviceAlias = $env:COMPUTERNAME }
@@ -86,13 +88,19 @@ function Remove-TeamViewerShortcut {
 
 try {
     # Build the MSI install argument list
-    $msiArguments = "/i `"$InstallerPath`" /qn CUSTOMCONFIGID=$ConfigID INSTALLSECURITYKEYREDIRECTION=1 SETTINGSFILE=`"$settingsfile`""
+    $msiArguments = "/i `"$InstallerPath`" /qn CUSTOMCONFIGID=$ConfigID SETTINGSFILE=`"$settingsfile`""
+    if ($InstallSecurityKeyRedirection) {
+        $msiArguments += " INSTALLSECURITYKEYREDIRECTION=1"
+    }
     if ($NoShortcut) {
         $msiArguments += " DESKTOPSHORTCUTS=0"
     }
 
     # Start the installation of TeamViewer
     Write-Output "Starting installation of TeamViewer Host from $InstallerPath with CUSTOMCONFIGID=$ConfigID"
+    if ($InstallSecurityKeyRedirection) {
+        Write-Output "InstallSecurityKeyRedirection option is enabled; setting INSTALLSECURITYKEYREDIRECTION=1."
+    }
     if ($NoShortcut) {
         Write-Output "NoShortcut option is enabled; setting DESKTOPSHORTCUTS=0."
     }
