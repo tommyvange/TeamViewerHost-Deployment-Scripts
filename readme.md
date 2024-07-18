@@ -37,6 +37,12 @@ The scripts use a configuration file (`config.json`) to store default values for
 
 You must download the `TeamViewer_Host.msi` installer from the TeamViewer Management Console. Once downloaded, place the installer in the same directory as the script or specify the path using the `InstallerPath` parameter.
 
+You can also use these direct links:
+- [TeamViewer MSI (64 bit)](https://dl.teamviewer.com/download/version_15x/TeamViewer_MSI64.zip)
+- [TeamViewer MSI (32 bit)](https://dl.teamviewer.com/download/version_15x/TeamViewer_MSI32.zip)
+
+*The links are to TeamViewer's official download server. The downloads include the MSI-package for both TeamViewer Host and TeamVIewer Full.*
+
 ### Path Considerations
 
 #### `config.json`
