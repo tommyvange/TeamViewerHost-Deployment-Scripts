@@ -27,7 +27,8 @@ param (
     [switch]$NoShortcut,
     [string]$DeviceAlias,
     [string]$InstallerPath,
-    [switch]$InstallSecurityKeyRedirection
+    [switch]$InstallSecurityKeyRedirection,
+    [string]$SettingsFile
 )
 
 # Path to configuration file
@@ -49,6 +50,7 @@ if (-not $NoShortcut -and $config.NoShortcut -ne $null) { $NoShortcut = $config.
 if (-not $DeviceAlias) { $DeviceAlias = $config.DeviceAlias }
 if (-not $InstallerPath) { $InstallerPath = Join-Path -Path $PSScriptRoot -ChildPath "TeamViewer_Host.msi" }
 if (-not $InstallSecurityKeyRedirection -and $config.InstallSecurityKeyRedirection -ne $null) { $InstallSecurityKeyRedirection = $config.InstallSecurityKeyRedirection }
+if (-not $SettingsFile) { $SettingsFile = $config.SettingsFile }
 
 # Default DeviceAlias to COMPUTERNAME if not specified
 if (-not $DeviceAlias) { $DeviceAlias = $env:COMPUTERNAME }
@@ -63,8 +65,6 @@ if (-not (Test-Path $InstallerPath)) { Write-Error "InstallerPath is invalid or 
 
 # Determine log file path
 $logFilePath = "$env:TEMP\installation_log_${ConfigID}.txt"
-
-$settingsfile = Join-Path -Path $PSScriptRoot -ChildPath "TeamViewer_Settings.tvopt"
 
 # Start transcript logging if enabled
 if ($Logging) {
@@ -88,7 +88,16 @@ function Remove-TeamViewerShortcut {
 
 try {
     # Build the MSI install argument list
-    $msiArguments = "/i `"$InstallerPath`" /qn CUSTOMCONFIGID=$ConfigID SETTINGSFILE=`"$settingsfile`""
+    $msiArguments = "/i `"$InstallerPath`" /qn CUSTOMCONFIGID=$ConfigID"
+    
+    # Add SETTINGSFILE argument only if SettingsFile is provided and exists
+    if ($SettingsFile -and (Test-Path $SettingsFile)) {
+        $msiArguments += " SETTINGSFILE=`"$SettingsFile`""
+        Write-Output "Using settings file: $SettingsFile"
+    } elseif ($SettingsFile) {
+        Write-Output "Warning: Specified settings file '$SettingsFile' does not exist. Proceeding without settings file."
+    }
+    
     if ($InstallSecurityKeyRedirection) {
         $msiArguments += " INSTALLSECURITYKEYREDIRECTION=1"
     }
